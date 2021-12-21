@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client';
-import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK, EDIT_AUTHOR } from '../queries';
+import { ALL_AUTHORS, ALL_BOOKS, EDIT_AUTHOR } from '../queries';
+import Select from 'react-select'
 
-const EditAuthor = () => {
+const EditAuthor = ({ authors }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
   const [error, setError] = useState('')
@@ -16,7 +17,7 @@ const EditAuthor = () => {
 
   const submit = async (event) => {
     event.preventDefault()
-    editAuthor({ variables: { name: name, setBornTo: born } })
+    editAuthor({ variables: { name: name.value, setBornTo: born } })
 
     setName('')
     setBorn('')
@@ -32,16 +33,29 @@ const EditAuthor = () => {
     }
   }, [result.data, setError])
 
+  const [nameOptions, setNameOptions] = useState([])
+  useEffect(() => {
+    setNameOptions([])
+    const optionObjects = []
+    authors.map(a => optionObjects.push({ value: a.name, label: a.name }))
+    setNameOptions(optionObjects)
+  }, [authors])
+
   return (
       <>
         <form onSubmit={submit}>
           <h3>Set birthyear </h3>
           <div>
             name
-            <input
+            <Select
+                defaultValue={name.value}
+                onChange={setName}
+                options={nameOptions}
+            />
+            {/*<input
                 value={name}
                 onChange={({ target }) => setName(target.value)}
-            />
+            />*/}
           </div>
           <div>
             born
@@ -65,6 +79,7 @@ const Authors = (props) => {
   useEffect(() => {
     if ( !result.loading ) {
       setAuthors(result.data.allAuthors)
+
     }
   }, [result])
 
@@ -101,9 +116,8 @@ const Authors = (props) => {
       </table>
       <br />
       <div>
-        <EditAuthor />
+        <EditAuthor authors={authors} />
       </div>
-
     </div>
   )
 }
