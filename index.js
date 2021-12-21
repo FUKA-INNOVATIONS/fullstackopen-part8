@@ -113,6 +113,15 @@ const typeDefs = gql`
   findAuthor(name: String!): Author
   }
   
+  type Mutation {
+    addBook(
+    title: String!, 
+    author: String!, 
+    published: Int!, 
+    genres: [String!]!
+    ): Book
+  }
+  
 `
 
 const resolvers = {
@@ -147,6 +156,21 @@ const resolvers = {
     bookCount: (root) => {
       const booksFound = books.filter(book => book.author === root.name)
       return booksFound.length
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if ( !authors.find(author => author.name === args.author) ) {
+        const author = {
+          name: args.author,
+          born: null,
+          id: uuid()
+        }
+        authors = authors.concat(author)
+      }
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      return book
     }
   }
 }
