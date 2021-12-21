@@ -29,8 +29,6 @@ const Authors = (props) => {
     return <div>loading...</div>
   }
 
-  //const authors = []
-
   return (
     <div>
       <h2>authors</h2>
