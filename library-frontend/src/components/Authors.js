@@ -16,6 +16,12 @@ const EditAuthor = ({ authors }) => {
   })
 
   const submit = async (event) => {
+
+    if ( born.length < 1 ) {
+      setError('Enter age')
+      return
+    }
+
     event.preventDefault()
     editAuthor({ variables: { name: name.value, setBornTo: born } })
 
