@@ -9,6 +9,7 @@ exports.Query = {
   findAuthor: async ( root, args ) => await Author.findOne(
       { name: args.name } ),
   allBooks: async ( root, args ) => {
+    console.log("QueryResolver > allBooks")
     const books = await Book.find( {} );
     if ( args.author && args.genre ) {
       const authorFound = await Author.findOne( { name: args.author } );

@@ -45,7 +45,7 @@ exports.typeDefs = gql`
         id: ID!
         born: Int
         bookCount: Int!
-        allBooks: [Book]!
+        allBooks: [Book!]!
     }
 
     type Book {

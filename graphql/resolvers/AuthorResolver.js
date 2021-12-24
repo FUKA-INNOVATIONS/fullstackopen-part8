@@ -12,5 +12,8 @@ exports.Author = {
     }
     return null;
   },
-  allBooks: async ( root ) =>await Book.find({ author: root._id })
+  allBooks: async ( root ) => {
+    console.log("authorResolver > allBooks")
+    await Book.find({ author: root._id })
+  }
 };

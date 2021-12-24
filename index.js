@@ -8,6 +8,8 @@ const { typeDefs } = require( './graphql/Schema' );
 const { Query } = require('./graphql/resolvers/QueryResolver');
 const { Mutation } = require('./graphql/resolvers/MutationResolver');
 const { Author } = require('./graphql/resolvers/AuthorResolver');
+const { Book } = require('./graphql/resolvers/BookResolver');
+
 
 console.log( 'connecting to', process.env.MONGODB_URI );
 
@@ -27,7 +29,8 @@ const server = new ApolloServer( {
   resolvers: {
     Query,
     Mutation,
-    Author
+    Author,
+    Book
   },
   context: async ( { req } ) => {
     const auth = req ? req.headers.authorization : null;
