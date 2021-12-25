@@ -11,7 +11,7 @@ const EditAuthor = ({ authors }) => {
   const [ editAuthor, result ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ],
     onError: (error) => {
-      setError(error.graphQLErrors[0].message)
+      setError(error.message)
     }
   })
 
@@ -23,7 +23,7 @@ const EditAuthor = ({ authors }) => {
     }
 
     event.preventDefault()
-    editAuthor({ variables: { name: name.value, setBornTo: born } })
+    await editAuthor({ variables: { name: name.value, setBornTo: born } })
 
     setName('')
     setBorn('')
@@ -122,7 +122,7 @@ const Authors = (props) => {
       </table>
       <br />
       <div>
-        <EditAuthor authors={authors} />
+        {localStorage.getItem('library-user-token') && <EditAuthor authors={authors} />}
       </div>
     </div>
   )

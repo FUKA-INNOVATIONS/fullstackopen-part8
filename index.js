@@ -1,15 +1,14 @@
 require( 'dotenv' ).config();
-const { ApolloServer} = require( 'apollo-server' );
+const { ApolloServer } = require( 'apollo-server' );
 const { v1: uuid } = require( 'uuid' );
 const mongoose = require( 'mongoose' );
 const User = require( './models/User' );
 const jwt = require( 'jsonwebtoken' );
 const { typeDefs } = require( './graphql/Schema' );
-const { Query } = require('./graphql/resolvers/QueryResolver');
-const { Mutation } = require('./graphql/resolvers/MutationResolver');
-const { Author } = require('./graphql/resolvers/AuthorResolver');
-const { Book } = require('./graphql/resolvers/BookResolver');
-
+const { Query } = require( './graphql/resolvers/QueryResolver' );
+const { Mutation } = require( './graphql/resolvers/MutationResolver' );
+const { Author } = require( './graphql/resolvers/AuthorResolver' );
+const { Book } = require( './graphql/resolvers/BookResolver' );
 
 console.log( 'connecting to', process.env.MONGODB_URI );
 
@@ -19,10 +18,10 @@ mongoose.connect( process.env.MONGODB_URI ).then( () => {
   console.log( 'error connection to MongoDB:', error.message );
 } );
 
-
 // TODO: fix > _id not found
 // TODO: username toLowerCase comparison
 // TODO: add book id to user books. for authenticated user
+// TODO: Add new book > form validation
 
 const server = new ApolloServer( {
   typeDefs,
@@ -30,7 +29,12 @@ const server = new ApolloServer( {
     Query,
     Mutation,
     Author,
-    Book
+    Book,
+  },
+  playground: {
+    settings: {
+      'editor.theme': 'light',
+    },
   },
   context: async ( { req } ) => {
     const auth = req ? req.headers.authorization : null;
@@ -45,6 +49,6 @@ const server = new ApolloServer( {
   },
 } );
 
-server.listen().then( ( { url } ) => {
+server.listen( { port: 4000 } ).then( ( { url } ) => {
   console.log( `Server ready at ${ url }` );
 } );

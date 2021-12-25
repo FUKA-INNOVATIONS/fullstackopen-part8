@@ -1,5 +1,8 @@
 const Author = require( '../../models/Author' );
 
+
+
 exports.Book = {
-  author: async ( root ) => await Author.findOne({ _id: root.author })
+  author: async ( root ) => Author.findOne({ _id: root.author })
+
 };

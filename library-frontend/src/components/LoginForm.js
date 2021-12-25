@@ -8,7 +8,7 @@ const LoginForm = ({ setError, setToken }) => {
 
   const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
-      setError(error.graphQLErrors[0].message)
+      setError(error.message)
     }
   })
 
@@ -16,18 +16,18 @@ const LoginForm = ({ setError, setToken }) => {
     if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
-      localStorage.setItem('phonenumbers-user-token', token)
+      localStorage.setItem('library-user-token', token)
     }
   }, [result.data]) // eslint-disable-line
 
   const submit = async (event) => {
     event.preventDefault()
 
-    login({ variables: { username, password } })
+    await login({ variables: { username, password } })
   }
 
   return (
-      <div>
+      <div style={{marginBottom: 30}}>
         <form onSubmit={submit}>
           <div>
             username <input
