@@ -2,10 +2,10 @@ const Author = require( '../../models/Author' );
 const Book = require( '../../models/Book' );
 
 exports.Query = {
-  me: ( root, args, context ) => context.currentUser,
+  me: async ( root, args, context ) => await context.currentUser,
   authorCount: async () => await Author.collection.countDocuments(),
   bookCount: async ( root ) => await Book.collection.countDocuments(),
-  allAuthors: async () => Author.find( {} ),
+  allAuthors: async () => await Author.find( {} ),
   findAuthor: async ( root, args ) => await Author.findOne(
       { name: args.name } ),
   allBooks: async ( root, args ) => {

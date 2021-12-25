@@ -3,6 +3,7 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
+import Recommended from './components/Recommended'
 import { useApolloClient } from '@apollo/client';
 
 const Notify = ( { errorMessage } ) => {
@@ -35,14 +36,6 @@ const App = () => {
     }, 10000 );
   };
 
-  /*if ( !localStorage.getItem( 'library-user-token' ) || token === null ) {
-    return (
-        <>
-          <Notify errorMessage={errorMessage} />
-          <LoginForm setToken={ setToken } setError={ notify } />
-        </>
-    );
-  }*/
 
   return (
       <div>
@@ -54,6 +47,7 @@ const App = () => {
           <button onClick={ () => setPage( 'authors' ) }>authors</button>
           <button onClick={ () => setPage( 'books' ) }>books</button>
           {localStorage.getItem('library-user-token') && <button onClick={ () => setPage( 'add' ) }>add book</button>}
+          {localStorage.getItem('library-user-token') && <button onClick={ () => setPage( 'recommended' ) }>Recommended</button>}
           {localStorage.getItem('library-user-token') && <button onClick={ () => logout() }>Sign out</button>}
         </div>
 
@@ -67,6 +61,10 @@ const App = () => {
 
         <NewBook
             show={ page === 'add' }
+        />
+
+        <Recommended
+            show={ page === 'recommended' }
         />
 
 
