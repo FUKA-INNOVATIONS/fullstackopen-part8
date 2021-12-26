@@ -58,10 +58,6 @@ const EditAuthor = ({ authors }) => {
                 onChange={setName}
                 options={nameOptions}
             />
-            {/*<input
-             value={name}
-             onChange={({ target }) => setName(target.value)}
-             />*/}
           </div>
           <div style={{ marginBottom: 20 }}>
             born

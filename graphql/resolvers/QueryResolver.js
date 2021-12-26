@@ -1,6 +1,9 @@
 const Author = require( '../../models/Author' );
 const Book = require( '../../models/Book' );
 
+const { PubSub } = require( 'graphql-subscriptions' );
+const pubsub = new PubSub()
+
 exports.Query = {
   me: async ( root, args, context ) => await context.currentUser,
   authorCount: async () => await Author.collection.countDocuments(),
@@ -9,8 +12,8 @@ exports.Query = {
   findAuthor: async ( root, args ) => await Author.findOne(
       { name: args.name } ),
   allBooks: async ( root, args ) => {
-    console.log("QueryResolver > allBooks")
     const books = await Book.find( {} );
+    await pubsub.publish('NEW_MESSAGE', {msg: 'asdasd'});
     if ( args.author && args.genre ) {
       const authorFound = await Author.findOne( { name: args.author } );
       const authorBooks = await Book.find( { author: authorFound._id } );
@@ -27,6 +30,7 @@ exports.Query = {
       const authorFound = await Author.findOne( { name: args.author } );
       return Book.find( { author: authorFound._id } );
     }
+    await pubsub.publish( 'SAY_HI', { bookAdded: book } )
     return books;
   },
 };

@@ -21,7 +21,6 @@ mongoose.connect( process.env.MONGODB_URI ).then( () => {
 // TODO: fix > _id not found
 // TODO: username toLowerCase comparison
 // TODO: add book id to user books. for authenticated user
-// TODO: Add new book > form validation
 
 const server = new ApolloServer( {
   typeDefs,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../queries';
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/client';
+import { ALL_BOOKS, BOOK_ADDED } from '../queries';
 
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS)
@@ -8,10 +8,38 @@ const Books = (props) => {
   const [genres, setGenres] = useState([])
   const [filter, setFilter] = useState(null)
 
+  const client = useApolloClient()
+
+  // function for updating cache
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+        set.map(p => p.title).includes(object.title)
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    console.log(dataInStore)
+    console.log(client)
+    // Check, is added book already existing?
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  }
+
+
+  // Subscribe, get data and refresh memory
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      props.notify(`New book '${addedBook.title}' added`)
+      updateCacheWith(addedBook)
+    }
+  })
+
   useEffect(() => {
     if ( !result.loading ) {
       setBooks(result.data.allBooks)
-
     }
   }, [result])
 
@@ -25,9 +53,6 @@ const Books = (props) => {
     setGenres(genresDistinct)
   }, [books])
 
-  if (!props.show) {
-    return null
-  }
 
   if (result.loading)  {
     return <div>loading...</div>

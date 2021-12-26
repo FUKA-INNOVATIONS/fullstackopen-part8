@@ -9,6 +9,9 @@ exports.typeDefs = gql`
         allAuthors: [Author!]
         findAuthor(name: String!): Author
         me: User
+        
+        newMessage: Message
+        testSubscription: String
     }
 
     type Mutation {
@@ -17,7 +20,6 @@ exports.typeDefs = gql`
             author: String!,
             published: Int!,
             genres: [String!]!
-
         ): Book
         editAuthor(
             name: String!,
@@ -70,4 +72,16 @@ exports.typeDefs = gql`
         AUTHOR
         GENRE
     }
+    
+    type Message {
+        msg: String
+    }
+
+    type Subscription {
+        newMessage: Message
+        bookAdded: Book!
+        numberIncremented: Int
+        sayHi: String
+    }
+    
 `;

@@ -11,10 +11,23 @@ const NewBook = (props) => {
   const [error, setError] = useState('')
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
+    // to keep store up to date
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ],
+
+    /*update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_BOOKS })
+      console.log('ddss: ', dataInStore)
+      dataInStore !== null  && store.writeQuery({
+        query: ALL_BOOKS,
+        data: {
+          ...dataInStore,
+          allPersons: [ ...dataInStore.allBooks, response.data.addBook ]
+        }
+      })
+    },
     onError: (error) => {
       setError(error.message)
-    }
+    }*/
   })
 
   if (!props.show) {

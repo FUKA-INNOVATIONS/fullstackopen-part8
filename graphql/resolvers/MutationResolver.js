@@ -3,6 +3,8 @@ const Book = require( '../../models/Book' );
 const { UserInputError, AuthenticationError } = require( 'apollo-server' );
 const User = require( '../../models/User' );
 const jwt = require( 'jsonwebtoken' );
+const { PubSub } = require( 'graphql-subscriptions' );
+const pubsub = new PubSub()
 
 exports.Mutation = {
   addBook: async ( root, args, { currentUser } ) => {
@@ -19,6 +21,7 @@ exports.Mutation = {
       try {
         await book.save();
         await newAuthor.save();
+        await pubsub.publish('BOOK_ADDED', { bookAdded: book })
         return book;
       } catch ( error ) {
         throw new UserInputError( error.message, {
@@ -29,6 +32,7 @@ exports.Mutation = {
       const book = new Book( { ...args, author: authorFound._id } );
       try {
         await book.save();
+        await pubsub.publish('BOOK_ADDED', { bookAdded: book })
         return book;
       } catch ( error ) {
         throw new UserInputError( error.message, {
@@ -85,5 +89,5 @@ exports.Mutation = {
         invalidArgs: args,
       } );
     } );
-  },
+  }
 };

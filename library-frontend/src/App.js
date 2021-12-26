@@ -55,17 +55,24 @@ const App = () => {
             show={ page === 'authors' }
         />
 
+        { page === 'books' &&
         <Books
-            show={ page === 'books' }
+            notify={ notify }
         />
+        }
 
         <NewBook
             show={ page === 'add' }
+            notify={ notify }
         />
 
-        <Recommended
-            show={ page === 'recommended' }
-        />
+        { page === 'recommended' ?
+            <Recommended
+                show={ page === 'recommended' }
+                token={ token }
+            />
+        : null}
+
 
 
       </div>

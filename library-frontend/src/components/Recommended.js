@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { AUTHENTICATED_USER, BOOKS_BY_GENRE } from '../queries';
 
 const Recommended = props => {
   const [books, setBooks] = useState([])
   const [user, setUser] = useState(null)
-  const userQuery = useQuery(AUTHENTICATED_USER)
+  const [getUser, userResult] = useLazyQuery(AUTHENTICATED_USER)
 
   const result = useQuery(BOOKS_BY_GENRE, {
     variables: {genre: user ? user.favoriteGenre : 'nre'}
   })
 
-  useEffect( () => {
-      if ( !userQuery.loading) {
-        setUser(userQuery.data.me)
-      }
-  }, [userQuery])
+
+
+  useEffect(async () => {
+      await getUser().then(u => {
+        console.log('uuuu', u)
+        setUser(u.data.me)
+      })
+  }, [props.show, props.token])
 
   useEffect(() => {
     if ( !result.loading) {
@@ -28,7 +31,7 @@ const Recommended = props => {
     return null
   }
 
-  if (result.loading || userQuery.loading)  {
+  if (result.loading )  {
     return <div>loading...</div>
   }
 
@@ -36,7 +39,6 @@ const Recommended = props => {
   return (
       <div>
         <h2>books</h2>
-        <h4>Manually refresh browser to get filterdByGenre(user.favorite)</h4>
 
         <table>
           <tbody>
